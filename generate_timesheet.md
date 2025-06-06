@@ -11,6 +11,11 @@ This script analyzes git commit history across multiple repositories and:
 - Groups work by day and week
 - Formats output as a readable timesheet
 
+## Requirements
+
+- Python 3.6+
+- pytz library (`pip install pytz`)
+
 ## Usage
 
 ```bash
@@ -23,8 +28,10 @@ This script analyzes git commit history across multiple repositories and:
 - `--since DATE`: Show commits more recent than a specific date (e.g., "2 weeks ago")
 - `--until DATE`: Show commits older than a specific date
 - `--repos REPO [REPO ...]`: Specific repository names to include
-- `--output FORMAT`: Output format (text or csv, default: text)
+- `--output FORMAT`: Output format (text, csv, or markdown, default: text)
 - `--author PATTERN`: Filter commits by author (default: "mcgarrah")
+- `--timezone TIMEZONE`: Timezone for dates (e.g., "US/Eastern", default: UTC)
+- `--output-file PATH`: Write output to file instead of stdout
 
 ## Examples
 
@@ -52,24 +59,40 @@ This script analyzes git commit history across multiple repositories and:
 ./generate_timesheet.py --author="michael mcgarrah" --since="2 weeks ago"
 ```
 
+### Generate timesheet in US Eastern timezone
+
+```bash
+./generate_timesheet.py --since="1 month ago" --timezone="US/Eastern"
+```
+
+### Generate CSV output for spreadsheet import
+
+```bash
+./generate_timesheet.py --since="1 month ago" --output=csv --output-file=timesheet.csv
+```
+
+### Generate markdown output for pretty formatting
+
+```bash
+./generate_timesheet.py --since="1 month ago" --output=markdown --output-file=timesheet.md
+```
+
 ### Generate timesheet for all specified repositories
 
 ```bash
 ./generate_timesheet.py --repos food_service_nutrition food-intelligence-app gpcc gs1_gpc_python gs1_gpc_gtin oneworldsync_client oneworldsync_python oneworldsync_python_medium oneworldsync_python_tinydb shiny-quiz shiny-shop usda_fdc_python --since="1 month ago"
 ```
 
-## Output Format
+## Output Formats
 
-The timesheet is organized by:
-- Weeks
-- Days within each week
-- Repositories worked on each day
-- Individual commits with time estimates and author information
+### Text Format
+Plain text output organized by weeks and days, showing detailed commit information.
 
-Each commit is assigned a time estimate based on:
-- Base time: 15 minutes per commit
-- Additional time for features, bug fixes, or refactoring
-- Adjustments based on time between commits
+### CSV Format
+Comma-separated values format suitable for importing into spreadsheet applications like Excel or Google Sheets.
+
+### Markdown Format
+Pretty markdown format with tables organized by week, suitable for viewing in markdown readers or converting to HTML.
 
 ## Time Estimation Logic
 

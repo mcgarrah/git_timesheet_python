@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 import re
 from collections import defaultdict
 import argparse
+import csv
+import sys
+import pytz
 
 def get_git_repos(base_dir):
     """Find git repositories in the specified directory."""
@@ -96,7 +99,14 @@ def round_to_15_min(minutes):
     """Round minutes to nearest 15-minute increment."""
     return round(minutes / 15) * 15
 
-def format_timesheet(time_entries, output_format='text'):
+def convert_to_timezone(date, timezone_str='UTC'):
+    """Convert datetime to specified timezone."""
+    if date.tzinfo is None:
+        date = date.replace(tzinfo=pytz.UTC)
+    target_tz = pytz.timezone(timezone_str)
+    return date.astimezone(target_tz)
+
+def format_timesheet(time_entries, output_format='text', timezone_str='UTC'):
     """Format time entries into a weekly timesheet."""
     if not time_entries:
         return "No git activity found in the specified time period."
@@ -112,6 +122,10 @@ def format_timesheet(time_entries, output_format='text'):
         
     time_entries = filtered_entries
     
+    # Convert dates to specified timezone
+    for entry in time_entries:
+        entry['date'] = convert_to_timezone(entry['date'], timezone_str)
+    
     # Group by week and day
     weeks = defaultdict(lambda: defaultdict(list))
     for entry in time_entries:
@@ -120,9 +134,19 @@ def format_timesheet(time_entries, output_format='text'):
         day = date.strftime('%Y-%m-%d')
         weeks[week_start][day].append(entry)
     
+    if output_format == 'text':
+        return format_text(weeks)
+    elif output_format == 'csv':
+        return format_csv(weeks, time_entries)
+    elif output_format == 'markdown':
+        return format_markdown(weeks)
+    else:
+        return format_text(weeks)  # Default to text
+
+def format_text(weeks):
+    """Format timesheet as plain text."""
     result = []
     
-    # Format as text
     for week_start, days in sorted(weeks.items()):
         result.append(f"\nWeek of {week_start}")
         result.append("=" * 80)
@@ -157,14 +181,103 @@ def format_timesheet(time_entries, output_format='text'):
     
     return "\n".join(result)
 
+def format_csv(weeks, time_entries):
+    """Format timesheet as CSV."""
+    output = []
+    
+    # Write to string buffer
+    output.append("Date,Day,Week,Start Time,Duration (min),Duration (hours),Repository,Commit,Message,Author")
+    
+    for entry in sorted(time_entries, key=lambda x: x['date']):
+        date = entry['date']
+        week_start = (date - timedelta(days=date.weekday())).strftime('%Y-%m-%d')
+        day_name = date.strftime('%A')
+        date_str = date.strftime('%Y-%m-%d')
+        time_str = date.strftime('%H:%M')
+        repo_name = os.path.basename(entry['repo'])
+        
+        # Escape any commas in the message
+        message = entry['message'].replace('"', '""')
+        
+        line = f'"{date_str}","{day_name}","{week_start}","{time_str}",{entry["minutes"]},{entry["minutes"]/60:.2f},"{repo_name}","{entry["commit"][:7]}","{message}","{entry["author_name"]}"'
+        output.append(line)
+    
+    return "\n".join(output)
+
+def format_markdown(weeks):
+    """Format timesheet as Markdown."""
+    result = []
+    
+    result.append("# Git Activity Timesheet\n")
+    
+    for week_start, days in sorted(weeks.items()):
+        result.append(f"## Week of {week_start}\n")
+        
+        # Create a table for the week
+        result.append("| Day | Date | Repository | Hours | Description |")
+        result.append("|-----|------|------------|-------|-------------|")
+        
+        week_total = 0
+        
+        # Sort days to ensure Monday-Sunday order
+        sorted_days = sorted(days.items())
+        
+        for day, entries in sorted_days:
+            day_date = datetime.strptime(day, '%Y-%m-%d')
+            day_name = day_date.strftime('%A')
+            day_total = sum(entry['minutes'] for entry in entries)
+            week_total += day_total
+            
+            # Group by repository
+            repos = defaultdict(list)
+            for entry in entries:
+                repos[entry['repo']].append(entry)
+            
+            # First row for the day includes the day name
+            first_row = True
+            
+            for repo, repo_entries in sorted(repos.items()):
+                repo_name = os.path.basename(repo)
+                repo_total = sum(entry['minutes'] for entry in repo_entries)
+                
+                # Group entries by similar tasks
+                tasks = defaultdict(list)
+                for entry in repo_entries:
+                    # Use first 30 chars of message as key
+                    key = entry['message'][:30]
+                    tasks[key].append(entry)
+                
+                for task_name, task_entries in tasks.items():
+                    task_total = sum(entry['minutes'] for entry in task_entries)
+                    task_desc = f"{task_name}... ({len(task_entries)} commits)"
+                    
+                    if first_row:
+                        result.append(f"| {day_name} | {day} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+                        first_row = False
+                    else:
+                        result.append(f"|  | | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+            
+            # Add day total
+            result.append(f"| **Total** | | | **{day_total/60:.2f}** | |")
+            result.append("| | | | | |")  # Empty row for readability
+        
+        # Add week total
+        result.append(f"| **Week Total** | | | **{week_total/60:.2f}** | |")
+        result.append("\n")
+    
+    return "\n".join(result)
+
 def main():
     parser = argparse.ArgumentParser(description='Generate a timesheet from git commit history')
     parser.add_argument('--base-dir', default=os.getcwd(), help='Base directory containing git repositories')
     parser.add_argument('--since', help='Show commits more recent than a specific date (e.g., "2 weeks ago")')
     parser.add_argument('--until', help='Show commits older than a specific date')
     parser.add_argument('--repos', nargs='+', help='Specific repository names to include')
-    parser.add_argument('--output', choices=['text', 'csv'], default='text', help='Output format')
-    parser.add_argument('--author', default='mcgarrah@gmail\.com', help='Filter commits by author (default: mcgarrah@gmail.com)')
+    parser.add_argument('--output', choices=['text', 'csv', 'markdown'], default='text', 
+                        help='Output format (text, csv, or markdown)')
+    parser.add_argument('--author', default='mcgarrah', help='Filter commits by author (default: mcgarrah)')
+    parser.add_argument('--timezone', default='UTC', help='Timezone for dates (e.g., "US/Eastern", default: UTC)')
+    parser.add_argument('--output-file', help='Write output to file instead of stdout')
     
     args = parser.parse_args()
     
@@ -198,9 +311,16 @@ def main():
     # Sort all entries by date
     all_time_entries.sort(key=lambda x: x['date'])
     
-    # Format and print timesheet
-    timesheet = format_timesheet(all_time_entries, args.output)
-    print(timesheet)
+    # Format timesheet
+    timesheet = format_timesheet(all_time_entries, args.output, args.timezone)
+    
+    # Output the timesheet
+    if args.output_file:
+        with open(args.output_file, 'w') as f:
+            f.write(timesheet)
+        print(f"Timesheet written to {args.output_file}")
+    else:
+        print(timesheet)
 
 if __name__ == "__main__":
     main()
