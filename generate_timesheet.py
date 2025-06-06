@@ -15,14 +15,16 @@ def get_git_repos(base_dir):
             repos.append(full_path)
     return repos
 
-def get_git_log(repo_path, since=None, until=None):
+def get_git_log(repo_path, since=None, until=None, author=None):
     """Get git log for a repository with author date and commit message."""
-    cmd = ['git', 'log', '--pretty=format:%ad|%s|%h', '--date=iso']
+    cmd = ['git', 'log', '--pretty=format:%ad|%an|%ae|%s|%h', '--date=iso']
     
     if since:
         cmd.append(f'--since={since}')
     if until:
         cmd.append(f'--until={until}')
+    if author:
+        cmd.append(f'--author={author}')
     
     try:
         result = subprocess.run(cmd, cwd=repo_path, capture_output=True, text=True)
@@ -44,11 +46,11 @@ def estimate_time_spent(commits, repo_name):
         if not commit:
             continue
         parts = commit.split('|')
-        if len(parts) >= 3:
-            date_str, message, commit_hash = parts[0], parts[1], parts[2]
+        if len(parts) >= 5:
+            date_str, author_name, author_email, message, commit_hash = parts[0], parts[1], parts[2], parts[3], parts[4]
             try:
                 date = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S %z')
-                parsed_commits.append((date, message, commit_hash, repo_name))
+                parsed_commits.append((date, message, commit_hash, repo_name, author_name, author_email))
             except ValueError:
                 continue
     
@@ -57,7 +59,7 @@ def estimate_time_spent(commits, repo_name):
     
     # Estimate time for each commit
     time_entries = []
-    for i, (date, message, commit_hash, repo) in enumerate(parsed_commits):
+    for i, (date, message, commit_hash, repo, author_name, author_email) in enumerate(parsed_commits):
         # Base time: 15 minutes per commit
         time_spent = 15
         
@@ -83,7 +85,9 @@ def estimate_time_spent(commits, repo_name):
             'repo': repo,
             'message': message,
             'commit': commit_hash,
-            'minutes': time_spent
+            'minutes': time_spent,
+            'author_name': author_name,
+            'author_email': author_email
         })
     
     return time_entries
@@ -96,6 +100,17 @@ def format_timesheet(time_entries, output_format='text'):
     """Format time entries into a weekly timesheet."""
     if not time_entries:
         return "No git activity found in the specified time period."
+        
+    # Filter for entries with "mcgarrah" in author name or email
+    filtered_entries = [entry for entry in time_entries 
+                       if 'mcgarrah' in entry['author_name'].lower() or 
+                          'mcgarrah' in entry['author_email'].lower() or
+                          'michael mcgarrah' in entry['author_name'].lower()]
+    
+    if not filtered_entries:
+        return "No git activity found for the specified author in the given time period."
+        
+    time_entries = filtered_entries
     
     # Group by week and day
     weeks = defaultdict(lambda: defaultdict(list))
@@ -135,7 +150,7 @@ def format_timesheet(time_entries, output_format='text'):
                 for entry in repo_entries:
                     time_str = f"{entry['minutes']/60:.2f}h"
                     commit_time = entry['date'].strftime('%H:%M')
-                    result.append(f"    {commit_time} - {time_str} - {entry['message'][:60]} ({entry['commit'][:7]})")
+                    result.append(f"    {commit_time} - {time_str} - {entry['message'][:60]} ({entry['commit'][:7]}) - {entry['author_name']}")
             
         result.append(f"\nWeek Total: {week_total/60:.2f} hours\n")
         result.append("=" * 80)
@@ -149,6 +164,7 @@ def main():
     parser.add_argument('--until', help='Show commits older than a specific date')
     parser.add_argument('--repos', nargs='+', help='Specific repository names to include')
     parser.add_argument('--output', choices=['text', 'csv'], default='text', help='Output format')
+    parser.add_argument('--author', default='mcgarrah@gmail\.com', help='Filter commits by author (default: mcgarrah@gmail.com)')
     
     args = parser.parse_args()
     
@@ -175,7 +191,7 @@ def main():
     for repo in repos:
         repo_name = os.path.basename(repo)
         print(f"Processing {repo_name}...")
-        commits = get_git_log(repo, args.since, args.until)
+        commits = get_git_log(repo, args.since, args.until, args.author)
         time_entries = estimate_time_spent(commits, repo_name)
         all_time_entries.extend(time_entries)
     
