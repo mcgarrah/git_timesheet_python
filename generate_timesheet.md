@@ -32,6 +32,7 @@ This script analyzes git commit history across multiple repositories and:
 - `--author PATTERN`: Filter commits by author (default: "mcgarrah")
 - `--timezone TIMEZONE`: Timezone for dates (e.g., "US/Eastern", default: UTC)
 - `--output-file PATH`: Write output to file instead of stdout
+- `--session-timeout MINUTES`: Minutes between commits to consider them part of the same work session (default: 60)
 
 ## Examples
 
@@ -100,4 +101,4 @@ Pretty markdown format with tables organized by week, suitable for viewing in ma
 - Bug fixes/issues: +15 minutes
 - New features/implementations: +30 minutes
 - Refactoring/improvements: +15 minutes
-- Commits close together (within 30 minutes) are considered part of the same work session
+- Commits close together (within 60 minutes by default) are considered part of the same work session

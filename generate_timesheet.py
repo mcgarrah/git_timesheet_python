@@ -9,6 +9,9 @@ import csv
 import sys
 import pytz
 
+# Configuration
+SESSION_TIMEOUT_MINUTES = 60  # Minutes between commits to consider them part of the same work session
+
 def get_git_repos(base_dir):
     """Find git repositories in the specified directory."""
     repos = []
@@ -79,8 +82,8 @@ def estimate_time_spent(commits, repo_name):
             next_date = parsed_commits[i+1][0]
             time_gap = (next_date - date).total_seconds() / 60
             
-            # If commits are close together (within 30 minutes), they're likely part of the same work session
-            if time_gap < 30:
+            # If commits are close together (within the configured session timeout), they're likely part of the same work session
+            if time_gap < SESSION_TIMEOUT_MINUTES:
                 time_spent = min(time_spent, time_gap)
         
         time_entries.append({
@@ -268,6 +271,8 @@ def format_markdown(weeks):
     return "\n".join(result)
 
 def main():
+    global SESSION_TIMEOUT_MINUTES
+    
     parser = argparse.ArgumentParser(description='Generate a timesheet from git commit history')
     parser.add_argument('--base-dir', default=os.getcwd(), help='Base directory containing git repositories')
     parser.add_argument('--since', help='Show commits more recent than a specific date (e.g., "2 weeks ago")')
@@ -278,8 +283,13 @@ def main():
     parser.add_argument('--author', default='mcgarrah', help='Filter commits by author (default: mcgarrah)')
     parser.add_argument('--timezone', default='UTC', help='Timezone for dates (e.g., "US/Eastern", default: UTC)')
     parser.add_argument('--output-file', help='Write output to file instead of stdout')
+    parser.add_argument('--session-timeout', type=int, default=SESSION_TIMEOUT_MINUTES, 
+                        help=f'Minutes between commits to consider them part of the same work session (default: {SESSION_TIMEOUT_MINUTES})')
     
     args = parser.parse_args()
+    
+    # Update session timeout if provided via command line
+    SESSION_TIMEOUT_MINUTES = args.session_timeout
     
     # Get all git repositories in the base directory
     all_repos = get_git_repos(args.base_dir)
