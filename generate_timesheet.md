@@ -92,7 +92,7 @@ Plain text output organized by weeks and days, showing detailed commit informati
 Comma-separated values format suitable for importing into spreadsheet applications like Excel or Google Sheets.
 
 ### Markdown Format
-Pretty markdown format with tables organized by week, suitable for viewing in markdown readers or converting to HTML.
+Pretty markdown format with tables organized by week, suitable for viewing in markdown readers or converting to HTML. Includes time ranges for each task to better understand work sessions.
 
 ## Time Estimation Logic
 
