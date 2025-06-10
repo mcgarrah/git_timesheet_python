@@ -106,7 +106,26 @@ def convert_to_timezone(date, timezone_str='UTC'):
     """Convert datetime to specified timezone."""
     if date.tzinfo is None:
         date = date.replace(tzinfo=pytz.UTC)
-    target_tz = pytz.timezone(timezone_str)
+    
+    # Handle common timezone aliases
+    timezone_aliases = {
+        'US/Eastern': 'America/New_York',
+        'US/Central': 'America/Chicago',
+        'US/Mountain': 'America/Denver',
+        'US/Pacific': 'America/Los_Angeles',
+        'US/Alaska': 'America/Anchorage',
+        'US/Hawaii': 'Pacific/Honolulu'
+    }
+    
+    # Use the alias if available
+    tz_name = timezone_aliases.get(timezone_str, timezone_str)
+    
+    try:
+        target_tz = pytz.timezone(tz_name)
+    except pytz.exceptions.UnknownTimeZoneError:
+        print(f"Warning: Unknown timezone '{timezone_str}'. Falling back to UTC.")
+        target_tz = pytz.UTC
+        
     return date.astimezone(target_tz)
 
 def format_timesheet(time_entries, output_format='text', timezone_str='UTC'):
