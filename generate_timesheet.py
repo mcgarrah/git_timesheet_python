@@ -109,12 +109,33 @@ def convert_to_timezone(date, timezone_str='UTC'):
     
     # Handle common timezone aliases
     timezone_aliases = {
+        # US timezone aliases
         'US/Eastern': 'America/New_York',
         'US/Central': 'America/Chicago',
         'US/Mountain': 'America/Denver',
         'US/Pacific': 'America/Los_Angeles',
         'US/Alaska': 'America/Anchorage',
-        'US/Hawaii': 'Pacific/Honolulu'
+        'US/Hawaii': 'Pacific/Honolulu',
+        
+        # Short timezone abbreviations
+        'EST': 'America/New_York',
+        'EDT': 'America/New_York',
+        'CST': 'America/Chicago',
+        'CDT': 'America/Chicago',
+        'MST': 'America/Denver',
+        'MDT': 'America/Denver',
+        'PST': 'America/Los_Angeles',
+        'PDT': 'America/Los_Angeles',
+        
+        # Prefixed short timezone abbreviations
+        'US/EST': 'America/New_York',
+        'US/EDT': 'America/New_York',
+        'US/CST': 'America/Chicago',
+        'US/CDT': 'America/Chicago',
+        'US/MST': 'America/Denver',
+        'US/MDT': 'America/Denver',
+        'US/PST': 'America/Los_Angeles',
+        'US/PDT': 'America/Los_Angeles'
     }
     
     # Use the alias if available
@@ -127,6 +148,10 @@ def convert_to_timezone(date, timezone_str='UTC'):
         target_tz = pytz.UTC
         
     return date.astimezone(target_tz)
+
+def get_timezone_abbr(date):
+    """Get timezone abbreviation (like EDT, EST, CST) from a datetime object."""
+    return date.strftime('%Z')
 
 def format_timesheet(time_entries, output_format='text', timezone_str='UTC'):
     """Format time entries into a weekly timesheet."""
@@ -196,7 +221,8 @@ def format_text(weeks):
                 for entry in repo_entries:
                     time_str = f"{entry['minutes']/60:.2f}h"
                     commit_time = entry['date'].strftime('%H:%M')
-                    result.append(f"    {commit_time} - {time_str} - {entry['message'][:60]} ({entry['commit'][:7]}) - {entry['author_name']}")
+                    tz_abbr = get_timezone_abbr(entry['date'])
+                    result.append(f"    {commit_time} {tz_abbr} - {time_str} - {entry['message'][:60]} ({entry['commit'][:7]}) - {entry['author_name']}")
             
         result.append(f"\nWeek Total: {week_total/60:.2f} hours\n")
         result.append("=" * 80)
@@ -208,7 +234,7 @@ def format_csv(weeks, time_entries):
     output = []
     
     # Write to string buffer
-    output.append("Date,Day,Week,Start Time,Duration (min),Duration (hours),Repository,Commit,Message,Author")
+    output.append("Date,Day,Week,Start Time,Timezone,Duration (min),Duration (hours),Repository,Commit,Message,Author")
     
     for entry in sorted(time_entries, key=lambda x: x['date']):
         date = entry['date']
@@ -216,12 +242,13 @@ def format_csv(weeks, time_entries):
         day_name = date.strftime('%A')
         date_str = date.strftime('%Y-%m-%d')
         time_str = date.strftime('%H:%M')
+        tz_abbr = get_timezone_abbr(date)
         repo_name = os.path.basename(entry['repo'])
         
         # Escape any commas in the message
         message = entry['message'].replace('"', '""')
         
-        line = f'"{date_str}","{day_name}","{week_start}","{time_str}",{entry["minutes"]},{entry["minutes"]/60:.2f},"{repo_name}","{entry["commit"][:7]}","{message}","{entry["author_name"]}"'
+        line = f'"{date_str}","{day_name}","{week_start}","{time_str}","{tz_abbr}",{entry["minutes"]},{entry["minutes"]/60:.2f},"{repo_name}","{entry["commit"][:7]}","{message}","{entry["author_name"]}"'
         output.append(line)
     
     return "\n".join(output)
@@ -236,8 +263,8 @@ def format_markdown(weeks):
         result.append(f"## Week of {week_start}\n")
         
         # Create a table for the week
-        result.append("| Day | Date | Time | Repository | Hours | Description |")
-        result.append("|-----|------|------|------------|-------|-------------|")
+        result.append("| Day | Date | Time | TZ | Repository | Hours | Description |")
+        result.append("|-----|------|------|-------|------------|-------|-------------|")
         
         week_total = 0
         
@@ -274,20 +301,22 @@ def format_markdown(weeks):
                     task_desc = f"{task_name}... ({len(task_entries)} commits)"
                     
                     # Get the time of the first commit in this task group
-                    first_commit_time = min(entry['date'] for entry in task_entries).strftime('%H:%M')
+                    first_commit = min(task_entries, key=lambda x: x['date'])
+                    first_commit_time = first_commit['date'].strftime('%H:%M')
+                    tz_abbr = get_timezone_abbr(first_commit['date'])
                     
                     if first_row:
-                        result.append(f"| {day_name} | {day} | {first_commit_time} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+                        result.append(f"| {day_name} | {day} | {first_commit_time} | {tz_abbr} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
                         first_row = False
                     else:
-                        result.append(f"|  | | {first_commit_time} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+                        result.append(f"|  | | {first_commit_time} | {tz_abbr} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
             
             # Add day total
-            result.append(f"| **Total** | | | | **{day_total/60:.2f}** | |")
-            result.append("| | | | | | |")  # Empty row for readability
+            result.append(f"| **Total** | | | | | **{day_total/60:.2f}** | |")
+            result.append("| | | | | | | |")  # Empty row for readability
         
         # Add week total
-        result.append(f"| **Week Total** | | | | **{week_total/60:.2f}** | |")
+        result.append(f"| **Week Total** | | | | | **{week_total/60:.2f}** | |")
         result.append("\n")
     
     return "\n".join(result)

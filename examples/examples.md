@@ -2,6 +2,12 @@
 
 Here are two examples of usage with outputs for review.
 
+## Text
+
+``` shell
+./generate_timesheet.py --base-dir ../ --repos timesheets --since "3 weeks" --timezone EDT --output text --output-file examples/timesheet.txt
+```
+
 ## CSV / Spreadsheet
 
 ``` shell
