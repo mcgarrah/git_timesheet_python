@@ -160,7 +160,7 @@ def format_timesheet(time_entries, output_format='text', timezone_str='UTC'):
         return format_text(weeks)
     elif output_format == 'csv':
         return format_csv(weeks, time_entries)
-    elif output_format == 'markdown':
+    elif output_format in ['markdown', 'md']:
         return format_markdown(weeks)
     else:
         return format_text(weeks)  # Default to text
@@ -236,8 +236,8 @@ def format_markdown(weeks):
         result.append(f"## Week of {week_start}\n")
         
         # Create a table for the week
-        result.append("| Day | Date | Repository | Hours | Description |")
-        result.append("|-----|------|------------|-------|-------------|")
+        result.append("| Day | Date | Time | Repository | Hours | Description |")
+        result.append("|-----|------|------|------------|-------|-------------|")
         
         week_total = 0
         
@@ -273,18 +273,21 @@ def format_markdown(weeks):
                     task_total = sum(entry['minutes'] for entry in task_entries)
                     task_desc = f"{task_name}... ({len(task_entries)} commits)"
                     
+                    # Get the time of the first commit in this task group
+                    first_commit_time = min(entry['date'] for entry in task_entries).strftime('%H:%M')
+                    
                     if first_row:
-                        result.append(f"| {day_name} | {day} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+                        result.append(f"| {day_name} | {day} | {first_commit_time} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
                         first_row = False
                     else:
-                        result.append(f"|  | | {repo_name} | {task_total/60:.2f} | {task_desc} |")
+                        result.append(f"|  | | {first_commit_time} | {repo_name} | {task_total/60:.2f} | {task_desc} |")
             
             # Add day total
-            result.append(f"| **Total** | | | **{day_total/60:.2f}** | |")
-            result.append("| | | | | |")  # Empty row for readability
+            result.append(f"| **Total** | | | | **{day_total/60:.2f}** | |")
+            result.append("| | | | | | |")  # Empty row for readability
         
         # Add week total
-        result.append(f"| **Week Total** | | | **{week_total/60:.2f}** | |")
+        result.append(f"| **Week Total** | | | | **{week_total/60:.2f}** | |")
         result.append("\n")
     
     return "\n".join(result)
@@ -297,8 +300,8 @@ def main():
     parser.add_argument('--since', help='Show commits more recent than a specific date (e.g., "2 weeks ago")')
     parser.add_argument('--until', help='Show commits older than a specific date')
     parser.add_argument('--repos', nargs='+', help='Specific repository names to include')
-    parser.add_argument('--output', choices=['text', 'csv', 'markdown'], default='text', 
-                        help='Output format (text, csv, or markdown)')
+    parser.add_argument('--output', choices=['text', 'csv', 'markdown', 'md'], default='text', 
+                        help='Output format (text, csv, or markdown/md)')
     parser.add_argument('--author', default='mcgarrah', help='Filter commits by author (default: mcgarrah)')
     parser.add_argument('--timezone', default='UTC', help='Timezone for dates (e.g., "US/Eastern", default: UTC)')
     parser.add_argument('--output-file', help='Write output to file instead of stdout')
