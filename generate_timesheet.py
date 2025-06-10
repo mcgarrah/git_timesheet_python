@@ -15,6 +15,13 @@ SESSION_TIMEOUT_MINUTES = 60  # Minutes between commits to consider them part of
 def get_git_repos(base_dir):
     """Find git repositories in the specified directory."""
     repos = []
+    
+    # First check if the base_dir itself is a git repository
+    if os.path.exists(os.path.join(base_dir, '.git')):
+        repos.append(base_dir)
+        return repos
+    
+    # If not, look for git repositories in subdirectories
     for item in os.listdir(base_dir):
         full_path = os.path.join(base_dir, item)
         if os.path.isdir(full_path) and os.path.exists(os.path.join(full_path, '.git')):

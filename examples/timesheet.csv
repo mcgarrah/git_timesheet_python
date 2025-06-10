@@ -7,4 +7,5 @@ Date,Day,Week,Start Time,Timezone,Duration (min),Duration (hours),Repository,Com
 "2025-06-07","Saturday","2025-06-02","14:56","EDT",15,0.25,"timesheets","76240a6","Session timeout is now configurable and defaults to 60 minutes.","Michael McGarrah"
 "2025-06-10","Tuesday","2025-06-09","14:57","EDT",11.383333333333333,0.19,"timesheets","ed3e67b","Add common US aliases handling for timezones","Michael McGarrah"
 "2025-06-10","Tuesday","2025-06-09","15:09","EDT",3.0833333333333335,0.05,"timesheets","fa05395","Add timezone aliases and improve markdown output format","Michael McGarrah"
-"2025-06-10","Tuesday","2025-06-09","15:12","EDT",15,0.25,"timesheets","6155162","Examples of usage with outputs","Michael McGarrah"
+"2025-06-10","Tuesday","2025-06-09","15:12","EDT",12.016666666666667,0.20,"timesheets","6155162","Examples of usage with outputs","Michael McGarrah"
+"2025-06-10","Tuesday","2025-06-09","15:24","EDT",15,0.25,"timesheets","e127c6b","Enhance timezone handling and output formats","Michael McGarrah"

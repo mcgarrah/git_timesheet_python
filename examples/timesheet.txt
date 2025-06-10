@@ -25,14 +25,15 @@ Week Total: 2.01 hours
 Week of 2025-06-09
 ================================================================================
 
-Tuesday, 2025-06-10 - Total: 0.49 hours
+Tuesday, 2025-06-10 - Total: 0.69 hours
 --------------------------------------------------------------------------------
 
-  timesheets - 0.49 hours
+  timesheets - 0.69 hours
     14:57 EDT - 0.19h - Add common US aliases handling for timezones (ed3e67b) - Michael McGarrah
     15:09 EDT - 0.05h - Add timezone aliases and improve markdown output format (fa05395) - Michael McGarrah
-    15:12 EDT - 0.25h - Examples of usage with outputs (6155162) - Michael McGarrah
+    15:12 EDT - 0.20h - Examples of usage with outputs (6155162) - Michael McGarrah
+    15:24 EDT - 0.25h - Enhance timezone handling and output formats (e127c6b) - Michael McGarrah
 
-Week Total: 0.49 hours
+Week Total: 0.69 hours
 
 ================================================================================
