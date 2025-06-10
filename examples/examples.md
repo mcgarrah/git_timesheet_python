@@ -1,0 +1,15 @@
+# Examples
+
+Here are two examples of usage with outputs for review.
+
+## CSV / Spreadsheet
+
+``` shell
+./generate_timesheet.py --base-dir ../ --repos timesheets --since "3 weeks" --timezone US/Eastern --output csv --output-file examples/timesheet.csv
+```
+
+## MD / Markdown
+
+``` shell
+./generate_timesheet.py --base-dir ../ --repos timesheets --since "3 weeks" --timezone US/Eastern --output markdown --output-file examples/timesheet.md
+```
