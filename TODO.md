@@ -17,7 +17,7 @@
 - [ ] Improve commit message parsing for better time estimation
 - [ ] Add option to exclude certain repositories or file types
 - [ ] Support for remote Github/GitLab/etc repositories
-- [ ] Simple WebUI maybe?!?
+- [ ] Simple WebUI maybe / like the interactive mode above ?!?
 
 ## Documentation
 

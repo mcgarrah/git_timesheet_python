@@ -5,6 +5,7 @@ A Python script to generate timesheets from git commit history, specifically fil
 ## Overview
 
 This script analyzes git commit history across multiple repositories and:
+
 - Filters commits by author name/email
 - Estimates time spent on each commit (in 15-minute increments)
 - Adjusts time based on commit message keywords
@@ -101,12 +102,15 @@ chmod +x generate_timesheet.py
 ## Output Formats
 
 ### Text Format
+
 Plain text output organized by weeks and days, showing detailed commit information with timezone abbreviations.
 
 ### CSV Format
+
 Comma-separated values format suitable for importing into spreadsheet applications like Excel or Google Sheets. Includes timezone information for each entry.
 
 ### Markdown Format
+
 Pretty markdown format with tables organized by week, suitable for viewing in markdown readers or converting to HTML. Includes time ranges and timezone abbreviations for each task to better understand work sessions.
 
 ## Time Estimation Logic
@@ -120,6 +124,7 @@ Pretty markdown format with tables organized by week, suitable for viewing in ma
 ## Timezone Support
 
 The script supports various timezone formats:
+
 - IANA timezone names (e.g., "America/New_York")
 - Common US timezone aliases (e.g., "US/Eastern")
 - Short timezone abbreviations (e.g., "EST", "EDT")
