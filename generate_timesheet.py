@@ -8,6 +8,11 @@ import argparse
 import csv
 import sys
 import pytz
+import configparser
+from pathlib import Path
+
+# Import config module
+from config import get_config
 
 # Configuration
 SESSION_TIMEOUT_MINUTES = 60  # Minutes between commits to consider them part of the same work session
@@ -331,6 +336,10 @@ def format_markdown(weeks):
 def main():
     global SESSION_TIMEOUT_MINUTES
     
+    # Load configuration
+    config = get_config()
+    
+    # Set up argument parser with values from config as defaults
     parser = argparse.ArgumentParser(description='Generate a timesheet from git commit history')
     parser.add_argument('--base-dir', default=os.getcwd(), help='Base directory containing git repositories')
     parser.add_argument('--since', help='Show commits more recent than a specific date (e.g., "2 weeks ago")')
@@ -338,11 +347,13 @@ def main():
     parser.add_argument('--repos', nargs='+', help='Specific repository names to include')
     parser.add_argument('--output', choices=['text', 'csv', 'markdown', 'md'], default='text', 
                         help='Output format (text, csv, or markdown/md)')
-    parser.add_argument('--author', default='mcgarrah', help='Filter commits by author (default: mcgarrah)')
-    parser.add_argument('--timezone', default='UTC', help='Timezone for dates (e.g., "US/Eastern", default: UTC)')
+    parser.add_argument('--author', default=config['author'], 
+                        help=f'Filter commits by author (default: {config["author"]})')
+    parser.add_argument('--timezone', default=config['timezone'], 
+                        help=f'Timezone for dates (e.g., "US/Eastern", default: {config["timezone"]})')
     parser.add_argument('--output-file', help='Write output to file instead of stdout')
-    parser.add_argument('--session-timeout', type=int, default=SESSION_TIMEOUT_MINUTES, 
-                        help=f'Minutes between commits to consider them part of the same work session (default: {SESSION_TIMEOUT_MINUTES})')
+    parser.add_argument('--session-timeout', type=int, default=int(config['session_timeout']), 
+                        help=f'Minutes between commits to consider them part of the same work session (default: {config["session_timeout"]})')
     
     args = parser.parse_args()
     

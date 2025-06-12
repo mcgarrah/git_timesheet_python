@@ -3,7 +3,7 @@
 ## Features
 
 - [ ] Add support for custom time estimation rules
-- [ ] Create a configuration file for default settings
+- [x] Create a configuration file for default settings
 - [ ] Add HTML output format option
 - [ ] Support for multiple authors in a single report
 - [ ] Add weekly summary view option
@@ -30,6 +30,6 @@
 
 ## Testing
 
-- [ ] Add unit tests
+- [x] Add unit tests
 - [ ] Create test fixtures for different repository structures
 - [ ] Test with various timezone configurations

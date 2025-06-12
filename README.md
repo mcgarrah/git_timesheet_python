@@ -16,6 +16,7 @@ This script analyzes git commit history across multiple repositories and:
 
 - Python 3.6+
 - pytz library (`pip install pytz`)
+- configparser (included in Python standard library)
 
 ## Installation
 
@@ -29,7 +30,36 @@ pip install -r requirements.txt
 
 # Make the script executable
 chmod +x generate_timesheet.py
+
+# Optional: Create a configuration file
+cp timesheet.ini.example ~/.timesheetrc
+# Edit the configuration file with your preferences
 ```
+
+## Configuration
+
+The script supports configuration files to set default values. It looks for configuration files in the following locations (in order of precedence):
+
+1. `.timesheetrc` in the current directory
+2. `timesheet.ini` in the current directory
+3. `.timesheetrc` in the user's home directory
+4. `timesheet.ini` in the user's `.config` directory
+
+Example configuration file:
+
+```ini
+[defaults]
+# Author pattern to filter commits
+author = michael mcgarrah
+
+# Default timezone for dates
+timezone = US/Eastern
+
+# Minutes between commits to consider them part of the same work session
+session_timeout = 60
+```
+
+Command-line arguments always override values from configuration files.
 
 ## Usage
 
@@ -44,10 +74,10 @@ chmod +x generate_timesheet.py
 - `--until DATE`: Show commits older than a specific date
 - `--repos REPO [REPO ...]`: Specific repository names to include
 - `--output FORMAT`: Output format (text, csv, markdown, or md, default: text)
-- `--author PATTERN`: Filter commits by author (default: "mcgarrah")
-- `--timezone TIMEZONE`: Timezone for dates (e.g., "US/Eastern", "EST", "EDT", default: UTC)
+- `--author PATTERN`: Filter commits by author (default from config or "mcgarrah")
+- `--timezone TIMEZONE`: Timezone for dates (default from config or "UTC")
 - `--output-file PATH`: Write output to file instead of stdout
-- `--session-timeout MINUTES`: Minutes between commits to consider them part of the same work session (default: 60)
+- `--session-timeout MINUTES`: Minutes between commits to consider them part of the same work session (default from config or 60)
 
 ## Examples
 
@@ -129,6 +159,40 @@ The script supports various timezone formats:
 - Common US timezone aliases (e.g., "US/Eastern")
 - Short timezone abbreviations (e.g., "EST", "EDT")
 - Prefixed short timezone abbreviations (e.g., "US/EST")
+
+## Development
+
+### Testing
+
+The project includes a comprehensive test suite using pytest. To run the tests:
+
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run all tests
+pytest
+
+# Run with coverage report
+pytest --cov=generate_timesheet
+
+# Run a specific test file
+pytest tests/test_timezone.py
+```
+
+### Test Structure
+
+- **Unit Tests**: Test individual functions in isolation
+  - `test_timezone.py`: Tests for timezone conversion and abbreviation
+  - `test_git_operations.py`: Tests for git repository detection and log retrieval
+  - `test_formatting.py`: Tests for output formatting functions
+
+- **Integration Tests**: Test the entire workflow
+  - `test_integration.py`: End-to-end tests using temporary git repositories
+
+### Adding New Tests
+
+When adding new features, please include appropriate tests in the `tests/` directory following the existing patterns.
 
 ## Contributing
 
