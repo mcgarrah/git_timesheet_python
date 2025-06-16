@@ -1,6 +1,6 @@
 # Git Timesheet Generator
 
-A Python package to generate timesheets from git commit history, specifically filtering for commits by a particular author.
+A Python package to generate git timesheets from commit history, specifically filtering for commits by a particular author.
 
 ## Overview
 
@@ -22,8 +22,8 @@ This tool analyzes git commit history across multiple repositories and:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/timesheets.git
-cd timesheets
+git clone https://github.com/mcgarrah/git_timesheet_python.git
+cd git_timesheet_python
 
 # Install the package in development mode
 pip install -e .

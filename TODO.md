@@ -1,4 +1,10 @@
-# TODO List for Timesheet Generator
+# TODO List for Generate Git Timesheet (GGTS)
+
+## Needed
+
+- [ ] Github Actions for CICD/Release
+- [ ] PyPi release support
+- [ ] ReadTheDocs release support
 
 ## Features
 

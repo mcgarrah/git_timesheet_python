@@ -1,6 +1,6 @@
-# Git Timesheet Generator Setup
+# Generate Git Timesheet (GGTS) Setup
 
-This document explains how to set up the Git Timesheet Generator tool in a Python virtual environment.
+This document explains how to set up the Generate Git Timesheet (GGTS) tool in a Python virtual environment.
 
 ## Prerequisites
 
@@ -12,8 +12,8 @@ This document explains how to set up the Git Timesheet Generator tool in a Pytho
 ### 1. Clone the repository (if you haven't already)
 
 ```bash
-git clone <repository-url>
-cd timesheets
+git clone https://github.com/mcgarrah/git_timesheet_python
+cd git_timesheet_python
 ```
 
 ### 2. Create a virtual environment
@@ -47,17 +47,17 @@ pip install -r requirements.txt
 ### 4. Verify installation
 
 ```bash
-python generate_timesheet.py --help
+ggts --help
 ```
 
 ## Usage
 
-Once set up, you can use the timesheet generator as described in the [generate_timesheet.md](generate_timesheet.md) documentation.
+Once set up, you can use the timesheet generator as described in the [README.md](README.md) documentation.
 
 ### Basic example:
 
 ```bash
-python generate_timesheet.py --since="2 weeks ago" --timezone="US/Eastern"
+ggts --since="2 weeks ago" --timezone="US/Eastern"
 ```
 
 ## Deactivating the virtual environment

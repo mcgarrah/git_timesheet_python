@@ -16,10 +16,10 @@ setup(
     },
     author="Michael McGarrah",
     author_email="mcgarrah@gmail.com",
-    description="Generate timesheets from git commit history",
+    description="Generate Git Timesheets from commit history",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/mcgarrah/git-timesheet",
+    url="https://github.com/mcgarrah/git_timesheet_python",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
