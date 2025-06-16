@@ -6,9 +6,9 @@ from datetime import datetime
 import pytz
 from collections import defaultdict
 
-# Add parent directory to path to import the main script
+# Add parent directory to path to import the module
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from generate_timesheet import format_text, format_csv, format_markdown, format_timesheet
+from git_timesheet.formatters import format_text, format_csv, format_markdown, format_timesheet
 
 class TestFormatting:
     """Test output formatting functions"""

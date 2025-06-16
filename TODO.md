@@ -2,9 +2,9 @@
 
 ## Needed
 
-- [ ] Github Actions for CICD/Release
-- [ ] PyPi release support
-- [ ] ReadTheDocs release support
+- [x] Verify the python library works for all existing use-cases
+- [ ] Github Actions for Package release to PyPi
+- [ ] Github Actions for ReadTheDocs release
 
 ## Features
 
@@ -24,7 +24,7 @@
 - [ ] Add option to exclude certain repositories or file types
 - [ ] Support for remote Github/GitLab/etc repositories
 - [ ] Simple WebUI maybe / like the interactive mode above ?!?
-- [ ] Convert to a pypi python package with a cli
+- [x] Convert to a pypi python package with a cli
 
 ## Documentation
 

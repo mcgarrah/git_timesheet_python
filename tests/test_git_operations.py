@@ -6,9 +6,9 @@ from unittest.mock import patch, MagicMock
 import subprocess
 from datetime import datetime
 
-# Add parent directory to path to import the main script
+# Add parent directory to path to import the module
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from generate_timesheet import get_git_repos, get_git_log, estimate_time_spent
+from git_timesheet.git_utils import get_git_repos, get_git_log, estimate_time_spent
 
 class TestGitOperations:
     """Test git repository operations"""

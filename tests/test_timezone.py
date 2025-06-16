@@ -5,9 +5,9 @@ import pytest
 from datetime import datetime
 import pytz
 
-# Add parent directory to path to import the main script
+# Add parent directory to path to import the module
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from generate_timesheet import convert_to_timezone, get_timezone_abbr
+from git_timesheet.timezone_utils import convert_to_timezone, get_timezone_abbr
 
 class TestTimezoneHandling:
     """Test timezone conversion and abbreviation functions"""
