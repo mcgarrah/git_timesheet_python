@@ -1,10 +1,10 @@
 # Git Timesheet Generator
 
-A Python script to generate timesheets from git commit history, specifically filtering for commits by a particular author.
+A Python package to generate timesheets from git commit history, specifically filtering for commits by a particular author.
 
 ## Overview
 
-This script analyzes git commit history across multiple repositories and:
+This tool analyzes git commit history across multiple repositories and:
 
 - Filters commits by author name/email
 - Estimates time spent on each commit (in 15-minute increments)
@@ -14,9 +14,9 @@ This script analyzes git commit history across multiple repositories and:
 
 ## Requirements
 
-- Python 3.6+
-- pytz library (`pip install pytz`)
-- configparser (included in Python standard library)
+- Python 3.8+
+- pytz library
+- click library
 
 ## Installation
 
@@ -25,25 +25,23 @@ This script analyzes git commit history across multiple repositories and:
 git clone https://github.com/yourusername/timesheets.git
 cd timesheets
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Make the script executable
-chmod +x generate_timesheet.py
+# Install the package in development mode
+pip install -e .
 
 # Optional: Create a configuration file
-cp timesheet.ini.example ~/.timesheetrc
-# Edit the configuration file with your preferences
+ggts --init
+# Or manually copy the example file
+cp ggts.ini.example ~/.ggtsrc
 ```
 
 ## Configuration
 
 The script supports configuration files to set default values. It looks for configuration files in the following locations (in order of precedence):
 
-1. `.timesheetrc` in the current directory
-2. `timesheet.ini` in the current directory
-3. `.timesheetrc` in the user's home directory
-4. `timesheet.ini` in the user's `.config` directory
+1. `.ggtsrc` in the current directory
+2. `ggts.ini` in the current directory
+3. `.ggtsrc` in the user's home directory
+4. `ggts.ini` in the user's `.config` directory
 
 Example configuration file:
 
@@ -64,11 +62,16 @@ Command-line arguments always override values from configuration files.
 ## Usage
 
 ```bash
-./generate_timesheet.py [options]
+# Generate a timesheet (default)
+ggts [options]
+
+# Initialize configuration
+ggts --init
 ```
 
 ### Options
 
+- `--init`: Initialize configuration file
 - `--base-dir PATH`: Base directory containing git repositories (default: current directory)
 - `--since DATE`: Show commits more recent than a specific date (e.g., "2 weeks ago")
 - `--until DATE`: Show commits older than a specific date
@@ -84,49 +87,55 @@ Command-line arguments always override values from configuration files.
 ### Generate timesheet for the last 2 weeks
 
 ```bash
-./generate_timesheet.py --since="2 weeks ago"
+ggts --since="2 weeks ago"
 ```
 
 ### Generate timesheet for specific repositories
 
 ```bash
-./generate_timesheet.py --repos food_service_nutrition food-intelligence-app gpcc --since="1 month ago"
+ggts --repos food_service_nutrition food-intelligence-app gpcc --since="1 month ago"
 ```
 
 ### Generate timesheet for a specific date range
 
 ```bash
-./generate_timesheet.py --since="2023-01-01" --until="2023-01-31"
+ggts --since="2023-01-01" --until="2023-01-31"
 ```
 
 ### Generate timesheet with specific author pattern
 
 ```bash
-./generate_timesheet.py --author="michael mcgarrah" --since="2 weeks ago"
+ggts --author="michael mcgarrah" --since="2 weeks ago"
 ```
 
 ### Generate timesheet in US Eastern timezone
 
 ```bash
-./generate_timesheet.py --since="1 month ago" --timezone="US/Eastern"
+ggts --since="1 month ago" --timezone="US/Eastern"
 ```
 
 ### Generate CSV output for spreadsheet import
 
 ```bash
-./generate_timesheet.py --since="1 month ago" --output=csv --output-file=timesheet.csv
+ggts --since="1 month ago" --output=csv --output-file=timesheet.csv
 ```
 
 ### Generate markdown output for pretty formatting
 
 ```bash
-./generate_timesheet.py --since="1 month ago" --output=markdown --output-file=timesheet.md
+ggts --since="1 month ago" --output=markdown --output-file=timesheet.md
 ```
 
 ### Generate timesheet for all specified repositories
 
 ```bash
-./generate_timesheet.py --repos food_service_nutrition food-intelligence-app gpcc gs1_gpc_python gs1_gpc_gtin oneworldsync_client oneworldsync_python oneworldsync_python_medium oneworldsync_python_tinydb shiny-quiz shiny-shop usda_fdc_python --since="1 month ago"
+ggts --repos food_service_nutrition food-intelligence-app gpcc gs1_gpc_python gs1_gpc_gtin oneworldsync_client oneworldsync_python oneworldsync_python_medium oneworldsync_python_tinydb shiny-quiz shiny-shop usda_fdc_python --since="1 month ago"
+```
+
+### Initialize configuration
+
+```bash
+ggts --init
 ```
 
 ## Output Formats
@@ -168,13 +177,13 @@ The project includes a comprehensive test suite using pytest. To run the tests:
 
 ```bash
 # Install development dependencies
-pip install -r requirements-dev.txt
+pip install -e ".[dev]"
 
 # Run all tests
 pytest
 
 # Run with coverage report
-pytest --cov=generate_timesheet
+pytest --cov=git_timesheet
 
 # Run a specific test file
 pytest tests/test_timezone.py

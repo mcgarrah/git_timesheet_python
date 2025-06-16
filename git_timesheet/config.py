@@ -14,10 +14,11 @@ def get_config():
     
     # Config file locations to check (in order of precedence)
     config_paths = [
-        Path.cwd() / '.timesheetrc',                  # Current directory rc file
-        Path.cwd() / 'timesheet.ini',                 # Current directory ini file
-        Path.home() / '.timesheetrc',                 # User's home directory rc file
-        Path.home() / '.config' / 'timesheet.ini',    # XDG config directory
+        Path.cwd() / '.ggtsrc',                      # Current directory rc file
+        Path.cwd() / 'ggts.ini',                     # Current directory ini file
+        Path.home() / '.ggtsrc',                     # User's home directory rc file
+        Path.home() / '.config' / 'ggts.ini',        # XDG config directory
+        Path.home() / '.config' / 'git-timesheet' / 'config.ini',  # New XDG config directory
     ]
     
     # Create config parser with defaults

@@ -18,6 +18,7 @@
 - [ ] Add option to exclude certain repositories or file types
 - [ ] Support for remote Github/GitLab/etc repositories
 - [ ] Simple WebUI maybe / like the interactive mode above ?!?
+- [ ] Convert to a pypi python package with a cli
 
 ## Documentation
 
