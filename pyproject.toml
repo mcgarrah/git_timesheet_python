@@ -1,6 +1,6 @@
 [project]
 name = "git-timesheet"
-version = "0.1.1"
+version = "0.1.2"
 description = "Generate Git Timesheets from commit history"
 readme = "README.md"
 authors = [{ name = "Michael McGarrah", email = "mcgarrah@gmail.com" }]
@@ -35,7 +35,7 @@ dev = [
 docs = ["sphinx>=4.0", "sphinx-rtd-theme>=1.0"]
 
 [project.urls]
-Homepage = "hhttps://github.com/mcgarrah/git_timesheet_python"
+Homepage = "https://github.com/mcgarrah/git_timesheet_python"
 "Bug Tracker" = "https://github.com/mcgarrah/git_timesheet_python/issues"
 Repository = "https://github.com/mcgarrah/git_timesheet_python"
 "Documentation" = "https://git-timesheet.readthedocs.io/en/latest/"
