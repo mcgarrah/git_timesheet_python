@@ -38,11 +38,11 @@ To generate these samples yourself, you can run:
 
 ```bash
 # Generate text output
-ggts generate --since="1 month ago" --output=text --output-file=timesheet.txt
+ggts --since="1 month ago" --output=text --output-file=timesheet.txt
 
 # Generate CSV output
-ggts generate --since="1 month ago" --output=csv --output-file=timesheet.csv
+ggts --since="1 month ago" --output=csv --output-file=timesheet.csv
 
 # Generate markdown output
-ggts generate --since="1 month ago" --output=markdown --output-file=timesheet.md
+ggts --since="1 month ago" --output=markdown --output-file=timesheet.md
 ```

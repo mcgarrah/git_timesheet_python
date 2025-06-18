@@ -37,10 +37,10 @@ Configuration
 
 The tool supports configuration files to set default values. It looks for configuration files in the following locations (in order of precedence):
 
-1. ``.timesheetrc`` in the current directory
-2. ``timesheet.ini`` in the current directory
-3. ``.timesheetrc`` in the user's home directory
-4. ``timesheet.ini`` in the user's ``.config`` directory
+1. ``.ggtsrc`` in the current directory
+2. ``ggts.ini`` in the current directory
+3. ``.ggtsrc`` in the user's home directory
+4. ``ggts.ini`` in the user's ``.config`` directory
 5. ``config.ini`` in the user's ``.config/git-timesheet`` directory
 
 You can create a configuration file using the ``ggts init`` command, or manually create one with the following format:
@@ -62,10 +62,14 @@ Usage
 
 .. code-block:: bash
 
-   # Generate a timesheet
+   # Generate a timesheet (default command)
+   ggts [OPTIONS]
+   # or explicitly
    ggts generate [OPTIONS]
 
    # Initialize configuration
+   ggts --init
+   # or
    ggts init
 
 Options
@@ -89,6 +93,9 @@ Generate timesheet for the last 2 weeks
 
 .. code-block:: bash
 
+   # Using default command
+   ggts --since="2 weeks ago"
+   # or explicitly
    ggts generate --since="2 weeks ago"
 
 Generate timesheet for specific repositories
@@ -138,7 +145,10 @@ Initialize configuration
 
 .. code-block:: bash
 
+   # Using the dedicated command
    ggts init
+   # or using the flag
+   ggts --init
 
 Output Formats
 -------------

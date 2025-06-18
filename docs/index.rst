@@ -35,13 +35,17 @@ Quick Start
    pip install git-timesheet
 
    # Initialize configuration
+   ggts --init
+   # or
    ggts init
 
    # Generate a timesheet for the last 2 weeks
+   ggts --since="2 weeks ago"
+   # or explicitly
    ggts generate --since="2 weeks ago"
 
    # Generate a CSV timesheet for a specific repository
-   ggts generate --repos my-project --output csv --output-file timesheet.csv
+   ggts --repos my-project --output csv --output-file timesheet.csv
 
 Indices and tables
 ==================

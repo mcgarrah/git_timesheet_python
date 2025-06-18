@@ -17,6 +17,8 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install git-timesheet
 
 # Initialize configuration
+ggts --init
+# or
 ggts init
 ```
 
@@ -25,6 +27,9 @@ This will create a configuration file at `~/.config/git-timesheet/config.ini` wi
 ### Generate a Timesheet for the Last 2 Weeks
 
 ```bash
+# Using default command
+ggts --since="2 weeks ago"
+# or explicitly
 ggts generate --since="2 weeks ago"
 ```
 
@@ -96,10 +101,10 @@ ggts generate --repos project1 --since="2 weeks ago" --timezone="US/Eastern" --o
 
 You can create multiple configuration files:
 
-1. `.timesheetrc` in your current directory
-2. `timesheet.ini` in your current directory
-3. `.timesheetrc` in your home directory
-4. `timesheet.ini` in your `.config` directory
+1. `.ggtsrc` in your current directory
+2. `ggts.ini` in your current directory
+3. `.ggtsrc` in your home directory
+4. `ggts.ini` in your `.config` directory
 5. `config.ini` in your `.config/git-timesheet` directory
 
 Example configuration file:
@@ -114,7 +119,7 @@ session_timeout = 45
 With this configuration, you can simply run:
 
 ```bash
-ggts generate --since="2 weeks ago"
+ggts --since="2 weeks ago"
 ```
 
 And it will use your configured defaults for author, timezone, and session timeout.

@@ -6,10 +6,10 @@ This document provides examples of configuration files for the Git Timesheet Gen
 
 The Git Timesheet Generator looks for configuration files in the following locations (in order of precedence):
 
-1. `.timesheetrc` in the current directory
-2. `timesheet.ini` in the current directory
-3. `.timesheetrc` in your home directory
-4. `timesheet.ini` in your `.config` directory
+1. `.ggtsrc` in the current directory
+2. `ggts.ini` in the current directory
+3. `.ggtsrc` in your home directory
+4. `ggts.ini` in your `.config` directory
 5. `config.ini` in your `.config/git-timesheet` directory
 
 ## Basic Configuration
@@ -27,7 +27,7 @@ session_timeout = 60
 
 If you work with multiple identities, you can create different configuration files for different projects:
 
-**Project A: ~/projectA/.timesheetrc**
+**Project A: ~/projectA/.ggtsrc**
 ```ini
 [defaults]
 author = John Doe
@@ -35,7 +35,7 @@ timezone = US/Eastern
 session_timeout = 60
 ```
 
-**Project B: ~/projectB/.timesheetrc**
+**Project B: ~/projectB/.ggtsrc**
 ```ini
 [defaults]
 author = john.doe@company.com
