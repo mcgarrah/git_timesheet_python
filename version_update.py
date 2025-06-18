@@ -139,7 +139,7 @@ def main():
     """Main function"""
     if len(sys.argv) != 2:
         print(f"Usage: {sys.argv[0]} NEW_VERSION")
-        print("Example: python version_update.py 0.1.5")
+        print("Example: python version_update.py 0.1.1")
         return 1
 
     new_version = sys.argv[1]

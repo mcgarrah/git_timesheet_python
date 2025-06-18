@@ -9,7 +9,7 @@ from git_timesheet import __version__
 
 # -- Project information -----------------------------------------------------
 project = 'Generate Git Timesheet'
-copyright = '2023, Michael McGarrah'
+copyright = '2025, Michael McGarrah'
 author = 'Michael McGarrah'
 version = __version__
 release = __version__
