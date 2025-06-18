@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath('..'))
 from git_timesheet import __version__
 
 # -- Project information -----------------------------------------------------
-project = 'Git Timesheet Generator'
+project = 'Generate Git Timesheet'
 copyright = '2023, Michael McGarrah'
 author = 'Michael McGarrah'
 version = __version__

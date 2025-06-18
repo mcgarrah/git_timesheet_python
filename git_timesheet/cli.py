@@ -24,7 +24,7 @@ from . import __version__
 @click.option('--session-timeout', type=int, help='Minutes between commits to consider them part of the same work session')
 @click.option('--init', is_flag=True, help='Initialize configuration file')
 def cli(base_dir, since, until, repos, output, author, timezone, output_file, session_timeout, init):
-    """Git Timesheet Generator - Create timesheets from git commit history"""
+    """Generate Git Timesheet - Create timesheets from git commit history"""
     if init:
         initialize_config()
         return

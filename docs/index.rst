@@ -34,7 +34,7 @@ Quick Start
    # Install the package
    pip install git-timesheet
 
-   # Initialize configuration (creates ~/.config/git-timesheet/config.ini)
+   # Initialize configuration
    ggts init
 
    # Generate a timesheet for the last 2 weeks

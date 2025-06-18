@@ -22,7 +22,7 @@ From Source
 .. code-block:: bash
 
    # Clone the repository
-   git clone https://github.com/yourusername/git-timesheet.git
+   git clone https://github.com/mcgarrah/git-timesheet.git
    cd git-timesheet
 
    # Create and activate a virtual environment
@@ -62,7 +62,11 @@ Usage
 
 .. code-block:: bash
 
+   # Generate a timesheet
    ggts generate [OPTIONS]
+
+   # Initialize configuration
+   ggts init
 
 Options
 ~~~~~~~
@@ -128,6 +132,13 @@ Generate markdown output for pretty formatting
 .. code-block:: bash
 
    ggts generate --since="1 month ago" --output=markdown --output-file=timesheet.md
+
+Initialize configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   ggts init
 
 Output Formats
 -------------

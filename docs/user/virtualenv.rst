@@ -9,7 +9,7 @@ We recommend using Python virtual environments for all Python projects. This iso
 Creating a Virtual Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For all Git Timesheet Generator development and usage, we use the ``.venv`` directory for virtual environments:
+For all Generate Git Timesheet development and usage, we use the ``.venv`` directory for virtual environments:
 
 .. code-block:: bash
 
@@ -19,7 +19,7 @@ For all Git Timesheet Generator development and usage, we use the ``.venv`` dire
 Activating the Virtual Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before installing or using Git Timesheet Generator, activate the virtual environment:
+Before installing or using Generate Git Timesheet, activate the virtual environment:
 
 On Linux/macOS:
 
@@ -51,7 +51,7 @@ Once the virtual environment is active, you can install the package:
 Deactivating the Virtual Environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When you're done working with Git Timesheet Generator, you can deactivate the virtual environment:
+When you're done working with Generate Git Timesheet, you can deactivate the virtual environment:
 
 .. code-block:: bash
 
